@@ -3,113 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trivia Hidden Object Battle</title>
+    <title>Trivia Hunt</title>
     <script src="/socket.io/socket.io.js"></script>
     <style>
-        :root {
-            --jungle-green: #1a2e1a;
-            --accent-gold: #ffcc00;
-        }
-
-        body { 
-            margin: 0; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: var(--jungle-green); 
-            color: white; 
-            overflow-x: hidden;
-            text-align: center;
-        }
-
-        /* SCREENS */
-        .screen { display: none; padding: 20px; }
-        .active { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
-
-        /* LOGIN BOX */
-        .login-card {
-            background: rgba(0,0,0,0.7);
-            padding: 40px;
-            border-radius: 15px;
-            border: 2px solid var(--accent-gold);
-            max-width: 400px;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border: none;
-            font-size: 16px;
-        }
-
-        button {
-            background: var(--accent-gold);
-            color: black;
-            border: none;
-            padding: 15px 30px;
-            font-weight: bold;
-            font-size: 18px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        button:hover { transform: scale(1.05); }
-
-        /* TIMER & HUD */
-        #hud {
-            position: fixed;
-            top: 20px;
-            width: 100%;
-            z-index: 100;
-            pointer-events: none;
-        }
-
-        .timer-box {
-            background: rgba(0,0,0,0.8);
-            padding: 10px 25px;
-            border-radius: 50px;
-            border: 2px solid var(--accent-gold);
-            display: inline-block;
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--accent-gold);
-        }
-
-        /* THE GAME BOARD */
+        body { margin: 0; font-family: sans-serif; background: #1a2e1a; color: white; text-align: center; overflow-x: hidden; }
+        .screen { display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
+        .active { display: flex; }
         #game-area {
             position: relative;
-            width: 1500px; /* Base Width */
-            height: 857px; /* Base Height */
-            max-width: 95vw;
-            margin: 20px auto;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            background-color: #000;
-            border: 4px solid #2d5a27;
-            /* Anti-Scrub Cursor */
-            cursor: crosshair !important;
-            aspect-ratio: 1500 / 857;
+            width: 1500px; height: 857px;
+            max-width: 95vw; margin: 20px auto;
+            background-size: contain; background-repeat: no-repeat; background-position: center;
+            background-color: #000; border: 4px solid #ffcc00;
+            cursor: crosshair !important; aspect-ratio: 1500 / 857;
+        }
+        #hit-area { position: absolute; border-radius: 50%; z-index: 10; cursor: crosshair !important; }
+        .timer-box { background: rgba(0,0,0,0.8); padding: 10px 25px; border-radius: 50px; border: 2px solid #ffcc00; font-size: 24px; color: #ffcc00; }
+        input { padding: 12px; margin: 10px; border-radius: 5px; border: none; width: 250px; }
+        button { background: #ffcc00; padding: 15px 30px; font-weight: bold; border-radius: 5px; cursor: pointer; border: none; }
+    </style>
+</head>
+<body>
+
+    <div id="hud" style="display:none; position:fixed; top:10px; width:100%; z-index:100;">
+        <div class="timer-box"><span id="timer-label">THINK</span>: <span id="timer-clock">0</span>s</div>
+    </div>
+
+    <div id="screen-login" class="screen active">
+        <h1>🐒 Jungle Trivia</h1>
+        <input type="text" id="nick" placeholder="Nickname">
+        <input type="text" id="uid" placeholder="User ID">
+        <button onclick="join()">JOIN GAME</button>
+        <p id="p-count">Waiting for players...</p>
+    </div>
+
+    <div id="screen-think" class="screen">
+        <h1 id="q-text" style="font-size:40px;">Question?</h1>
+    </div>
+
+    <div id="screen-search" class="screen">
+        <div id="game-area"><div id="hit-area"></div></div>
+    </div>
+
+    <div id="screen-results" class="screen">
+        <h1>🏆 FINAL RESULTS</h1>
+        <div id="leaderboard-list"></div>
+    </div>
+
+    <script>
+        const socket = io();
+        let t;
+
+        function join() {
+            const n = document.getElementById('nick').value;
+            const u = document.getElementById('uid').value;
+            if(n && u) {
+                socket.emit('joinGame', { nickname: n, userId: u });
+                document.getElementById('screen-login').innerHTML = "<h2>Ready! Wait for Admin to start.</h2>";
+            }
         }
 
-        #hit-area {
-            position: absolute;
-            border-radius: 50%;
-            z-index: 10;
-            /* border: 2px solid red; */ /* Uncomment to test placement */
-            cursor: crosshair !important;
+        socket.on('updatePlayerCount', (c) => { 
+            const el = document.getElementById('p-count');
+            if(el) el.innerText = `${c} / 20 Players`;
+        });
+
+        socket.on('phaseThink', (d) => {
+            show('screen-think');
+            document.getElementById('q-text').innerText = d.q;
+            clock(d.time, "THINK");
+        });
+
+        socket.on('phaseSearch', (d) => {
+            show('screen-search');
+            const board = document.getElementById('game-area');
+            const hit = document.getElementById('hit-area');
+            board.style.backgroundImage = `url('${d.scene}')`;
+            const ratio = board.clientWidth / 1500;
+            hit.style.display = 'block';
+            hit.style.width = (d.radius * 2 * ratio) + "px";
+            hit.style.height = (d.radius * 2 * ratio) + "px";
+            hit.style.left = ((d.targetX * ratio) - (d.radius * ratio)) + "px";
+            hit.style.top = ((d.targetY * ratio) - (d.radius * ratio)) + "px";
+            hit.onclick = () => { socket.emit('foundItem'); hit.style.display = 'none'; };
+            clock(d.time, "FIND IT");
+        });
+
+        socket.on('roundWinner', (d) => { alert(d.name + " won! +" + d.points); });
+
+        socket.on('tournamentComplete', (s) => {
+            show('screen-results');
+            document.getElementById('leaderboard-list').innerHTML = s.map((p, i) => `<p>${i+1}. ${p.name} - ${p.score}</p>`).join('');
+        });
+
+        socket.on('resetGame', () => location.reload());
+
+        function clock(s, l) {
+            clearInterval(t);
+            document.getElementById('hud').style.display = 'block';
+            document.getElementById('timer-label').innerText = l;
+            let left = s;
+            document.getElementById('timer-clock').innerText = left;
+            t = setInterval(() => { left--; document.getElementById('timer-clock').innerText = left; if(left<=0) clearInterval(t); }, 1000);
         }
 
-        /* LEADERBOARD PODIUM */
-        .podium-item {
-            background: rgba(255,255,255,0.1);
-            margin: 5px;
-            padding: 15px;
-            width: 80%;
-            max-width: 500px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
+        function show(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
         }
-    </
+    </script>
+</body>
+</html>
