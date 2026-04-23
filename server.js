@@ -7,13 +7,13 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-// Serve static files from the 'public' folder (images, etc)
-app.use(express.static(path.join(__dirname, 'public')));
+// --- FILE PATHING ---
+const publicPath = path.join(__dirname, 'public');
+app.use(express.static(publicPath));
 
-// --- THE HOME ROUTE ---
-// This ensures that when you visit the main URL, it loads your index.html
+// Force the home route to load index.html
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(publicPath, 'index.html'));
 });
 
 // --- GAME STATE ---
@@ -51,6 +51,7 @@ app.get('/admin-dashboard', (req, res) => {
 
     res.send(`
         <html>
+        <head><title>Admin Control</title></head>
         <body style="font-family:sans-serif; padding:40px; background:#f4f4f4;">
             <div style="max-width:800px; margin:auto; background:white; padding:20px; border-radius:10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
                 <h2 style="color:#2c3e50;">Admin Dashboard - Round ${currentRound}/10</h2>
@@ -61,6 +62,8 @@ app.get('/admin-dashboard', (req, res) => {
                     </tr>
                     ${rows}
                 </table>
+                <br>
+                <button onclick="fetch('/start-game-trigger')" style="padding:10px 20px; background:#27ae60; color:white; border:none; border-radius:5px; cursor:pointer;">START GAME FOR EVERYONE</button>
             </div>
             <script>setTimeout(() => location.reload(), 3000);</script>
         </body>
@@ -68,90 +71,20 @@ app.get('/admin-dashboard', (req, res) => {
     `);
 });
 
+// Admin trigger to start the game
+app.get('/start-game-trigger', (req, res) => {
+    currentRound = 0;
+    runNextRound();
+    res.send("Game Started!");
+});
+
 // --- SOCKET LOGIC ---
 io.on('connection', (socket) => {
-    
     socket.on('joinGame', (data) => {
         if (Object.keys(players).length < 20) {
-            players[socket.id] = { 
-                name: data.nickname, 
-                userId: data.userId, 
-                score: 0 
-            };
+            players[socket.id] = { name: data.nickname, userId: data.userId, score: 0 };
             io.emit('updatePlayerCount', Object.keys(players).length);
         }
     });
 
-    socket.on('startGame', () => {
-        currentRound = 0;
-        runNextRound();
-    });
-
-    socket.on('foundItem', () => {
-        if (gameActive && players[socket.id]) {
-            const reactionTime = (Date.now() - searchStartTime) / 1000;
-            const points = Math.max(100, Math.floor(1000 - (reactionTime * 60)));
-            
-            players[socket.id].score += points;
-            gameActive = false; 
-            
-            io.emit('roundWinner', { 
-                name: players[socket.id].name, 
-                points: points 
-            });
-
-            setTimeout(runNextRound, 3000);
-        }
-    });
-
-    socket.on('disconnect', () => {
-        delete players[socket.id];
-        io.emit('updatePlayerCount', Object.keys(players).length);
-    });
-});
-
-function runNextRound() {
-    currentRound++;
-    
-    if (currentRound > MAX_ROUNDS) {
-        const finalStandings = Object.values(players).sort((a, b) => b.score - a.score);
-        io.emit('tournamentComplete', finalStandings);
-        
-        setTimeout(() => {
-            players = {}; 
-            io.emit('resetGame');
-        }, 15000);
-        return;
-    }
-
-    const roundData = TRIVIA_LIB[Math.floor(Math.random() * TRIVIA_LIB.length)];
-    
-    io.emit('phaseThink', { 
-        q: roundData.q, 
-        round: currentRound, 
-        time: 5 
-    });
-
-    setTimeout(() => {
-        gameActive = true;
-        searchStartTime = Date.now();
-        io.emit('phaseSearch', { 
-            scene: roundData.scene, 
-            targetX: roundData.targetX, 
-            targetY: roundData.targetY, 
-            radius: roundData.radius,
-            time: 15
-        });
-
-        setTimeout(() => {
-            if (gameActive) {
-                gameActive = false;
-                io.emit('roundTimeout');
-                setTimeout(runNextRound, 3000);
-            }
-        }, 15000);
-    }, 5000);
-}
-
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`Game Server running on port ${PORT}`));
+    socket.on('foundItem
