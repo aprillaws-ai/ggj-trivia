@@ -1,12 +1,20 @@
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
+const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-app.use(express.static('public'));
+// Serve static files from the 'public' folder (images, etc)
+app.use(express.static(path.join(__dirname, 'public')));
+
+// --- THE HOME ROUTE ---
+// This ensures that when you visit the main URL, it loads your index.html
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // --- GAME STATE ---
 let players = {};
@@ -24,7 +32,6 @@ const TRIVIA_LIB = [
         targetY: 250, 
         radius: 50 
     }
-    // You can add more questions here following the exact format above
 ];
 
 // --- ADMIN DASHBOARD ---
