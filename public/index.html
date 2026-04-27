@@ -1,116 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trivia Hunt</title>
-    <script src="/socket.io/socket.io.js"></script>
+    <title>GGJ Community Game</title>
     <style>
-        body { margin: 0; font-family: sans-serif; background: #1a2e1a; color: white; text-align: center; overflow-x: hidden; }
-        .screen { display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
-        .active { display: flex; }
-        #game-area {
-            position: relative;
-            width: 1500px; height: 857px;
-            max-width: 95vw; margin: 20px auto;
-            background-size: contain; background-repeat: no-repeat; background-position: center;
-            background-color: #000; border: 4px solid #ffcc00;
-            cursor: crosshair !important; aspect-ratio: 1500 / 857;
-        }
-        #hit-area { position: absolute; border-radius: 50%; z-index: 10; cursor: crosshair !important; }
-        .timer-box { background: rgba(0,0,0,0.8); padding: 10px 25px; border-radius: 50px; border: 2px solid #ffcc00; font-size: 24px; color: #ffcc00; }
-        input { padding: 12px; margin: 10px; border-radius: 5px; border: none; width: 250px; }
-        button { background: #ffcc00; padding: 15px 30px; font-weight: bold; border-radius: 5px; cursor: pointer; border: none; }
+        body { font-family: sans-serif; text-align: center; background: #222; color: white; }
+        #wheel { width: 300px; height: 300px; border-radius: 50%; border: 10px solid gold; 
+                 transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1); margin: 20px auto; 
+                 display: flex; align-items: center; justify-content: center; background: conic-gradient(red, blue, green, yellow, purple, orange, cyan, pink); }
+        .player-list { list-style: none; padding: 0; }
+        .player-item { background: #444; margin: 5px; padding: 10px; border-radius: 5px; }
+        #game-ui { display: none; }
     </style>
 </head>
 <body>
+    <h1>GGJ Challenge</h1>
 
-    <div id="hud" style="display:none; position:fixed; top:10px; width:100%; z-index:100;">
-        <div class="timer-box"><span id="timer-label">THINK</span>: <span id="timer-clock">0</span>s</div>
+    <div id="setup">
+        <input type="text" id="nameInput" placeholder="Enter Name">
+        <button onclick="join()">Join Game</button>
     </div>
 
-    <div id="screen-login" class="screen active">
-        <h1>🐒 Jungle Trivia</h1>
-        <input type="text" id="nick" placeholder="Nickname">
-        <input type="text" id="uid" placeholder="User ID">
-        <button onclick="join()">JOIN GAME</button>
-        <p id="p-count">Waiting for players...</p>
+    <div id="game-ui">
+        <button id="admin-btn" style="display:none;" onclick="spin()">ADMIN: SPIN WHEEL</button>
+        <div id="wheel">WHEEL</div>
+        <h2 id="current-task">Waiting for spin...</h2>
+        
+        <h3>Leaderboard</h3>
+        <ul id="players" class="player-list"></ul>
     </div>
 
-    <div id="screen-think" class="screen">
-        <h1 id="q-text" style="font-size:40px;">Question?</h1>
-    </div>
-
-    <div id="screen-search" class="screen">
-        <div id="game-area"><div id="hit-area"></div></div>
-    </div>
-
-    <div id="screen-results" class="screen">
-        <h1>🏆 FINAL RESULTS</h1>
-        <div id="leaderboard-list"></div>
-    </div>
-
+    <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
-        let t;
+        let myName = "";
 
         function join() {
-            const n = document.getElementById('nick').value;
-            const u = document.getElementById('uid').value;
-            if(n && u) {
-                socket.emit('joinGame', { nickname: n, userId: u });
-                document.getElementById('screen-login').innerHTML = "<h2>Ready! Wait for Admin to start.</h2>";
+            myName = document.getElementById('nameInput').value;
+            if(!myName) return alert("Enter a name!");
+            socket.emit('join-game', myName);
+            document.getElementById('setup').style.display = 'none';
+            document.getElementById('game-ui').style.display = 'block';
+            
+            // For testing, make the first person the admin
+            if (myName.toLowerCase() === 'admin') {
+                document.getElementById('admin-btn').style.display = 'inline-block';
             }
         }
 
-        socket.on('updatePlayerCount', (c) => { 
-            const el = document.getElementById('p-count');
-            if(el) el.innerText = `${c} / 20 Players`;
-        });
-
-        socket.on('phaseThink', (d) => {
-            show('screen-think');
-            document.getElementById('q-text').innerText = d.q;
-            clock(d.time, "THINK");
-        });
-
-        socket.on('phaseSearch', (d) => {
-            show('screen-search');
-            const board = document.getElementById('game-area');
-            const hit = document.getElementById('hit-area');
-            board.style.backgroundImage = `url('${d.scene}')`;
-            const ratio = board.clientWidth / 1500;
-            hit.style.display = 'block';
-            hit.style.width = (d.radius * 2 * ratio) + "px";
-            hit.style.height = (d.radius * 2 * ratio) + "px";
-            hit.style.left = ((d.targetX * ratio) - (d.radius * ratio)) + "px";
-            hit.style.top = ((d.targetY * ratio) - (d.radius * ratio)) + "px";
-            hit.onclick = () => { socket.emit('foundItem'); hit.style.display = 'none'; };
-            clock(d.time, "FIND IT");
-        });
-
-        socket.on('roundWinner', (d) => { alert(d.name + " won! +" + d.points); });
-
-        socket.on('tournamentComplete', (s) => {
-            show('screen-results');
-            document.getElementById('leaderboard-list').innerHTML = s.map((p, i) => `<p>${i+1}. ${p.name} - ${p.score}</p>`).join('');
-        });
-
-        socket.on('resetGame', () => location.reload());
-
-        function clock(s, l) {
-            clearInterval(t);
-            document.getElementById('hud').style.display = 'block';
-            document.getElementById('timer-label').innerText = l;
-            let left = s;
-            document.getElementById('timer-clock').innerText = left;
-            t = setInterval(() => { left--; document.getElementById('timer-clock').innerText = left; if(left<=0) clearInterval(t); }, 1000);
+        function spin() {
+            socket.emit('admin-spin');
         }
 
-        function show(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
+        socket.on('update-players', (list) => {
+            const ul = document.getElementById('players');
+            ul.innerHTML = list.map(p => `<li class="player-item">${p.name}: ${p.score} pts</li>`).join('');
+        });
+
+        socket.on('wheel-result', (data) => {
+            const wheel = document.getElementById('wheel');
+            const randomRotation = Math.floor(Math.random() * 360) + 1440; // 4 full spins + random
+            wheel.style.transform = `rotate(${randomRotation}deg)`;
+            
+            setTimeout(() => {
+                document.getElementById('current-task').innerText = "ROUND " + data.round + ": " + data.challenge;
+            }, 4000);
+        });
     </script>
 </body>
 </html>
