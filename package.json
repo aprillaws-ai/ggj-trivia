@@ -1,7 +1,7 @@
 {
-  "name": "trivia-hidden-object",
+  "name": "ggj-community-challenge",
   "version": "1.0.0",
-  "description": "Multiplayer Trivia Hunt",
+  "description": "Multiplayer Community Game",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
