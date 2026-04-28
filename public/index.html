@@ -1,32 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>GGJ Community Game</title>
+    <title>GGJ Community Game V2</title>
     <style>
-        body { font-family: sans-serif; text-align: center; background: #222; color: white; }
-        #wheel { width: 300px; height: 300px; border-radius: 50%; border: 10px solid gold; 
-                 transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1); margin: 20px auto; 
-                 display: flex; align-items: center; justify-content: center; background: conic-gradient(red, blue, green, yellow, purple, orange, cyan, pink); }
-        .player-list { list-style: none; padding: 0; }
-        .player-item { background: #444; margin: 5px; padding: 10px; border-radius: 5px; }
-        #game-ui { display: none; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; background: #46178f; color: white; margin: 0; padding: 0;}
+        h1 { margin-top: 40px; font-size: 3em; }
+        
+        #setup { margin-top: 100px; }
+        input { padding: 15px; font-size: 1.2em; border-radius: 5px; border: none; width: 250px; text-align: center; }
+        button { padding: 15px 30px; font-size: 1.2em; border-radius: 5px; border: none; background: #333333; color: white; cursor: pointer; font-weight: bold; margin-top: 20px;}
+        button:hover { background: #222; }
+        
+        /* Kahoot Style Challenge Display */
+        #challenge-display {
+            background: white; color: #333; padding: 40px; margin: 40px auto;
+            width: 60%; border-radius: 10px; box-shadow: 0px 8px 15px rgba(0,0,0,0.2);
+            font-size: 2em; font-weight: bold; display: none;
+        }
+
+        .player-list { list-style: none; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; max-width: 800px; margin: auto;}
+        .player-item { background: #260c4f; margin: 5px; padding: 15px; border-radius: 5px; font-weight: bold; min-width: 120px;}
+        
+        #game-ui { display: none; padding: 20px; }
+        #admin-controls { margin: 20px; padding: 20px; background: rgba(0,0,0,0.2); border-radius: 10px; display: none; }
     </style>
 </head>
 <body>
-    <h1>GGJ Challenge</h1>
+    <h1>GGJ Challenge V2</h1>
 
     <div id="setup">
-        <input type="text" id="nameInput" placeholder="Enter Name">
-        <button onclick="join()">Join Game</button>
+        <input type="text" id="nameInput" placeholder="Enter Nickname..."><br>
+        <button onclick="join()">Enter</button>
     </div>
 
     <div id="game-ui">
-        <button id="admin-btn" style="display:none;" onclick="spin()">ADMIN: SPIN WHEEL</button>
-        <div id="wheel">WHEEL</div>
-        <h2 id="current-task">Waiting for spin...</h2>
         
-        <h3>Leaderboard</h3>
-        <ul id="players" class="player-list"></ul>
+        <div id="admin-controls">
+            <h3>Admin Controls</h3>
+            <button onclick="nextRound()">START / NEXT ROUND</button>
+        </div>
+
+        <h2 id="round-indicator">Waiting for host to start...</h2>
+        
+        <div id="challenge-display">Get Ready!</div>
+        
+        <div style="margin-top: 50px;">
+            <h3>Scoreboard</h3>
+            <ul id="players" class="player-list"></ul>
+        </div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -36,34 +57,50 @@
 
         function join() {
             myName = document.getElementById('nameInput').value;
-            if(!myName) return alert("Enter a name!");
+            if(!myName) return alert("Please enter a nickname!");
+            
             socket.emit('join-game', myName);
             document.getElementById('setup').style.display = 'none';
             document.getElementById('game-ui').style.display = 'block';
             
-            // For testing, make the first person the admin
+            // For testing: if name is 'admin', show the controls
             if (myName.toLowerCase() === 'admin') {
-                document.getElementById('admin-btn').style.display = 'inline-block';
+                document.getElementById('admin-controls').style.display = 'block';
             }
         }
 
-        function spin() {
-            socket.emit('admin-spin');
+        function nextRound() {
+            socket.emit('admin-next-round');
         }
 
         socket.on('update-players', (list) => {
+            // Sort by highest score first
+            list.sort((a, b) => b.score - a.score);
             const ul = document.getElementById('players');
-            ul.innerHTML = list.map(p => `<li class="player-item">${p.name}: ${p.score} pts</li>`).join('');
+            ul.innerHTML = list.map(p => `<li class="player-item">${p.name}<br><span style="color: gold;">${p.score}</span></li>`).join('');
         });
 
-        socket.on('wheel-result', (data) => {
-            const wheel = document.getElementById('wheel');
-            const randomRotation = Math.floor(Math.random() * 360) + 1440; // 4 full spins + random
-            wheel.style.transform = `rotate(${randomRotation}deg)`;
+        // Instantly display the next challenge
+        socket.on('new-round', (data) => {
+            const display = document.getElementById('challenge-display');
+            document.getElementById('round-indicator').innerText = `ROUND ${data.round} OF 10`;
+            
+            // Kahoot-style brief "Get Ready" flash before showing the challenge
+            display.style.display = 'block';
+            display.style.background = '#f2f2f2';
+            display.innerText = "Get Ready...";
             
             setTimeout(() => {
-                document.getElementById('current-task').innerText = "ROUND " + data.round + ": " + data.challenge;
-            }, 4000);
+                display.style.background = 'white';
+                display.innerText = data.challenge;
+                // Here is where you would load the specific JSON data and images for the challenge
+            }, 1500); 
+        });
+
+        socket.on('game-over', (players) => {
+            document.getElementById('round-indicator').innerText = "GAME OVER!";
+            document.getElementById('challenge-display').innerText = "Look at the scoreboard to see the winner!";
+            document.getElementById('admin-controls').style.display = 'none';
         });
     </script>
 </body>
