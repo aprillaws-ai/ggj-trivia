@@ -2,7 +2,7 @@
   "Trivia": [
     {
       "type": "multiple-choice",
-      "image": "trivia-1.jpg",
+      "image": "/assets/trivia-1.jpg", 
       "question": "What animal is this?",
       "options": ["Lion", "Tiger", "Cheetah", "Leopard"],
       "answer": 1 
@@ -11,7 +11,7 @@
   "Hidden Animal": [
     {
       "type": "clickable-image",
-      "image": "hidden-1.jpg",
+      "image": "/assets/hidden-1.jpg",
       "question": "Find the hidden frog.",
       "targets": [{ "x": 45, "y": 60, "r": 5, "found": false }]
     }
@@ -19,21 +19,44 @@
   "Spot the Difference": [
     {
       "type": "clickable-image",
-      "image": "spot-split.jpg",
+      "image": "/assets/spot-split.jpg",
       "question": "Find the 5 differences!",
       "targets": [
         { "x": 10, "y": 20, "r": 4, "found": false },
         { "x": 80, "y": 90, "r": 4, "found": false },
-        // ... 3 more
+        { "x": 35, "y": 45, "r": 4, "found": false },
+        { "x": 60, "y": 15, "r": 4, "found": false },
+        { "x": 22, "y": 75, "r": 4, "found": false }
+      ]
+    }
+  ],
+  "Find Them All": [
+    {
+      "type": "clickable-image",
+      "image": "/assets/find-all-1.jpg",
+      "question": "Find all 3 hidden coins!",
+      "targets": [
+        { "x": 15, "y": 30, "r": 6, "found": false },
+        { "x": 85, "y": 50, "r": 6, "found": false },
+        { "x": 50, "y": 80, "r": 6, "found": false }
       ]
     }
   ],
   "Name the Character": [
     {
       "type": "multiple-choice",
-      "image": "char-1.jpg",
-      "question": "Who is this?",
+      "image": "/assets/char-1.jpg",
+      "question": "Who is this character?",
       "options": ["Mario", "Luigi", "Wario", "Toad"],
+      "answer": 0
+    }
+  ],
+  "Where in the World": [
+    {
+      "type": "multiple-choice",
+      "image": "/assets/world-1.jpg",
+      "question": "Where is this landmark located?",
+      "options": ["Paris, France", "London, UK", "Rome, Italy", "Berlin, Germany"],
       "answer": 0
     }
   ]
