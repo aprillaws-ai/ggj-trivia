@@ -1,63 +1,74 @@
 {
   "Trivia": [
-    {
-      "type": "multiple-choice",
-      "image": "/assets/trivia-1.jpg", 
-      "question": "What animal is this?",
-      "options": ["Lion", "Tiger", "Cheetah", "Leopard"],
-      "answer": 1 
-    }
+    { "type": "multiple-choice", "image": "/assets/trivia-1.jpg", "question": "Trivia Question 1?", "options": ["Option A", "Option B", "Option C", "Option D"], "answer": 0 },
+    { "type": "multiple-choice", "image": "/assets/trivia-2.jpg", "question": "Trivia Question 2?", "options": ["Option A", "Option B", "Option C", "Option D"], "answer": 1 },
+    { "type": "multiple-choice", "image": "/assets/trivia-3.jpg", "question": "Trivia Question 3?", "options": ["Option A", "Option B", "Option C", "Option D"], "answer": 2 },
+    { "type": "multiple-choice", "image": "/assets/trivia-4.jpg", "question": "Trivia Question 4?", "options": ["Option A", "Option B", "Option C", "Option D"], "answer": 3 },
+    { "type": "multiple-choice", "image": "/assets/trivia-5.jpg", "question": "Trivia Question 5?", "options": ["Option A", "Option B", "Option C", "Option D"], "answer": 0 },
+    { "type": "multiple-choice", "image": "/assets/trivia-6.jpg", "question": "Trivia Question 6?", "options": ["Option A", "Option B", "Option C", "Option D"], "answer": 1 },
+    { "type": "multiple-choice", "image": "/assets/trivia-7.jpg", "question": "Trivia Question 7?", "options": ["Option A", "Option B", "Option C", "Option D"], "answer": 2 },
+    { "type": "multiple-choice", "image": "/assets/trivia-8.jpg", "question": "Trivia Question 8?", "options": ["Option A", "Option B", "Option C", "Option D"], "answer": 3 },
+    { "type": "multiple-choice", "image": "/assets/trivia-9.jpg", "question": "Trivia Question 9?", "options": ["Option A", "Option B", "Option C", "Option D"], "answer": 0 },
+    { "type": "multiple-choice", "image": "/assets/trivia-10.jpg", "question": "Trivia Question 10?", "options": ["Option A", "Option B", "Option C", "Option D"], "answer": 1 }
   ],
   "Hidden Animal": [
-    {
-      "type": "clickable-image",
-      "image": "/assets/hidden-1.jpg",
-      "question": "Find the hidden frog.",
-      "targets": [{ "x": 45, "y": 60, "r": 5, "found": false }]
-    }
+    { "type": "clickable-image", "image": "/assets/hidden-1.jpg", "question": "Find the hidden animal 1", "targets": [{ "x": 50, "y": 50, "r": 5, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/hidden-2.jpg", "question": "Find the hidden animal 2", "targets": [{ "x": 50, "y": 50, "r": 5, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/hidden-3.jpg", "question": "Find the hidden animal 3", "targets": [{ "x": 50, "y": 50, "r": 5, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/hidden-4.jpg", "question": "Find the hidden animal 4", "targets": [{ "x": 50, "y": 50, "r": 5, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/hidden-5.jpg", "question": "Find the hidden animal 5", "targets": [{ "x": 50, "y": 50, "r": 5, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/hidden-6.jpg", "question": "Find the hidden animal 6", "targets": [{ "x": 50, "y": 50, "r": 5, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/hidden-7.jpg", "question": "Find the hidden animal 7", "targets": [{ "x": 50, "y": 50, "r": 5, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/hidden-8.jpg", "question": "Find the hidden animal 8", "targets": [{ "x": 50, "y": 50, "r": 5, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/hidden-9.jpg", "question": "Find the hidden animal 9", "targets": [{ "x": 50, "y": 50, "r": 5, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/hidden-10.jpg", "question": "Find the hidden animal 10", "targets": [{ "x": 50, "y": 50, "r": 5, "found": false }] }
   ],
   "Spot the Difference": [
-    {
-      "type": "clickable-image",
-      "image": "/assets/spot-split.jpg",
-      "question": "Find the 5 differences!",
-      "targets": [
-        { "x": 10, "y": 20, "r": 4, "found": false },
-        { "x": 80, "y": 90, "r": 4, "found": false },
-        { "x": 35, "y": 45, "r": 4, "found": false },
-        { "x": 60, "y": 15, "r": 4, "found": false },
-        { "x": 22, "y": 75, "r": 4, "found": false }
-      ]
-    }
+    { "type": "clickable-image", "image": "/assets/spot-1.jpg", "question": "Find the 5 differences! (Image 1)", "targets": [{ "x": 10, "y": 10, "r": 5, "found": false }, { "x": 20, "y": 20, "r": 5, "found": false }, { "x": 30, "y": 30, "r": 5, "found": false }, { "x": 40, "y": 40, "r": 5, "found": false }, { "x": 50, "y": 50, "r": 5, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/spot-2.jpg", "question": "Find the 5 differences! (Image 2)", "targets": [{ "x": 10, "y": 10, "r": 5, "found": false }, { "x": 20, "y": 20, "r": 5, "found": false }, { "x": 30, "y": 30, "r": 5, "found": false }, { "x": 40, "y": 40, "r": 5, "found": false }, { "x": 50, "y": 50, "r": 5, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/spot-3.jpg", "question": "Find the 5 differences! (Image 3)", "targets": [{ "x": 10, "y": 10, "r": 5, "found": false }, { "x": 20, "y": 20, "r": 5, "found": false }, { "x": 30, "y": 30, "r": 5, "found": false }, { "x": 40, "y": 40, "r": 5, "found": false }, { "x": 50, "y": 50, "r": 5, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/spot-4.jpg", "question": "Find the 5 differences! (Image 4)", "targets": [{ "x": 10, "y": 10, "r": 5, "found": false }, { "x": 20, "y": 20, "r": 5, "found": false }, { "x": 30, "y": 30, "r": 5, "found": false }, { "x": 40, "y": 40, "r": 5, "found": false }, { "x": 50, "y": 50, "r": 5, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/spot-5.jpg", "question": "Find the 5 differences! (Image 5)", "targets": [{ "x": 10, "y": 10, "r": 5, "found": false }, { "x": 20, "y": 20, "r": 5, "found": false }, { "x": 30, "y": 30, "r": 5, "found": false }, { "x": 40, "y": 40, "r": 5, "found": false }, { "x": 50, "y": 50, "r": 5, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/spot-6.jpg", "question": "Find the 5 differences! (Image 6)", "targets": [{ "x": 10, "y": 10, "r": 5, "found": false }, { "x": 20, "y": 20, "r": 5, "found": false }, { "x": 30, "y": 30, "r": 5, "found": false }, { "x": 40, "y": 40, "r": 5, "found": false }, { "x": 50, "y": 50, "r": 5, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/spot-7.jpg", "question": "Find the 5 differences! (Image 7)", "targets": [{ "x": 10, "y": 10, "r": 5, "found": false }, { "x": 20, "y": 20, "r": 5, "found": false }, { "x": 30, "y": 30, "r": 5, "found": false }, { "x": 40, "y": 40, "r": 5, "found": false }, { "x": 50, "y": 50, "r": 5, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/spot-8.jpg", "question": "Find the 5 differences! (Image 8)", "targets": [{ "x": 10, "y": 10, "r": 5, "found": false }, { "x": 20, "y": 20, "r": 5, "found": false }, { "x": 30, "y": 30, "r": 5, "found": false }, { "x": 40, "y": 40, "r": 5, "found": false }, { "x": 50, "y": 50, "r": 5, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/spot-9.jpg", "question": "Find the 5 differences! (Image 9)", "targets": [{ "x": 10, "y": 10, "r": 5, "found": false }, { "x": 20, "y": 20, "r": 5, "found": false }, { "x": 30, "y": 30, "r": 5, "found": false }, { "x": 40, "y": 40, "r": 5, "found": false }, { "x": 50, "y": 50, "r": 5, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/spot-10.jpg", "question": "Find the 5 differences! (Image 10)", "targets": [{ "x": 10, "y": 10, "r": 5, "found": false }, { "x": 20, "y": 20, "r": 5, "found": false }, { "x": 30, "y": 30, "r": 5, "found": false }, { "x": 40, "y": 40, "r": 5, "found": false }, { "x": 50, "y": 50, "r": 5, "found": false }] }
   ],
   "Find Them All": [
-    {
-      "type": "clickable-image",
-      "image": "/assets/find-all-1.jpg",
-      "question": "Find all 3 hidden coins!",
-      "targets": [
-        { "x": 15, "y": 30, "r": 6, "found": false },
-        { "x": 85, "y": 50, "r": 6, "found": false },
-        { "x": 50, "y": 80, "r": 6, "found": false }
-      ]
-    }
+    { "type": "clickable-image", "image": "/assets/findall-1.jpg", "question": "Find all 3 items (Image 1)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/findall-2.jpg", "question": "Find all 3 items (Image 2)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/findall-3.jpg", "question": "Find all 3 items (Image 3)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/findall-4.jpg", "question": "Find all 3 items (Image 4)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/findall-5.jpg", "question": "Find all 3 items (Image 5)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/findall-6.jpg", "question": "Find all 3 items (Image 6)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/findall-7.jpg", "question": "Find all 3 items (Image 7)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/findall-8.jpg", "question": "Find all 3 items (Image 8)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/findall-9.jpg", "question": "Find all 3 items (Image 9)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/findall-10.jpg", "question": "Find all 3 items (Image 10)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] }
   ],
   "Name the Character": [
-    {
-      "type": "multiple-choice",
-      "image": "/assets/char-1.jpg",
-      "question": "Who is this character?",
-      "options": ["Mario", "Luigi", "Wario", "Toad"],
-      "answer": 0
-    }
+    { "type": "multiple-choice", "image": "/assets/character-1.jpg", "question": "Who is Character 1?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 0 },
+    { "type": "multiple-choice", "image": "/assets/character-2.jpg", "question": "Who is Character 2?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 1 },
+    { "type": "multiple-choice", "image": "/assets/character-3.jpg", "question": "Who is Character 3?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 2 },
+    { "type": "multiple-choice", "image": "/assets/character-4.jpg", "question": "Who is Character 4?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 3 },
+    { "type": "multiple-choice", "image": "/assets/character-5.jpg", "question": "Who is Character 5?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 0 },
+    { "type": "multiple-choice", "image": "/assets/character-6.jpg", "question": "Who is Character 6?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 1 },
+    { "type": "multiple-choice", "image": "/assets/character-7.jpg", "question": "Who is Character 7?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 2 },
+    { "type": "multiple-choice", "image": "/assets/character-8.jpg", "question": "Who is Character 8?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 3 },
+    { "type": "multiple-choice", "image": "/assets/character-9.jpg", "question": "Who is Character 9?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 0 },
+    { "type": "multiple-choice", "image": "/assets/character-10.jpg", "question": "Who is Character 10?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 1 }
   ],
   "Where in the World": [
-    {
-      "type": "multiple-choice",
-      "image": "/assets/world-1.jpg",
-      "question": "Where is this landmark located?",
-      "options": ["Paris, France", "London, UK", "Rome, Italy", "Berlin, Germany"],
-      "answer": 0
-    }
+    { "type": "multiple-choice", "image": "/assets/world-1.jpg", "question": "Where is Location 1?", "options": ["City A", "City B", "City C", "City D"], "answer": 0 },
+    { "type": "multiple-choice", "image": "/assets/world-2.jpg", "question": "Where is Location 2?", "options": ["City A", "City B", "City C", "City D"], "answer": 1 },
+    { "type": "multiple-choice", "image": "/assets/world-3.jpg", "question": "Where is Location 3?", "options": ["City A", "City B", "City C", "City D"], "answer": 2 },
+    { "type": "multiple-choice", "image": "/assets/world-4.jpg", "question": "Where is Location 4?", "options": ["City A", "City B", "City C", "City D"], "answer": 3 },
+    { "type": "multiple-choice", "image": "/assets/world-5.jpg", "question": "Where is Location 5?", "options": ["City A", "City B", "City C", "City D"], "answer": 0 },
+    { "type": "multiple-choice", "image": "/assets/world-6.jpg", "question": "Where is Location 6?", "options": ["City A", "City B", "City C", "City D"], "answer": 1 },
+    { "type": "multiple-choice", "image": "/assets/world-7.jpg", "question": "Where is Location 7?", "options": ["City A", "City B", "City C", "City D"], "answer": 2 },
+    { "type": "multiple-choice", "image": "/assets/world-8.jpg", "question": "Where is Location 8?", "options": ["City A", "City B", "City C", "City D"], "answer": 3 },
+    { "type": "multiple-choice", "image": "/assets/world-9.jpg", "question": "Where is Location 9?", "options": ["City A", "City B", "City C", "City D"], "answer": 0 },
+    { "type": "multiple-choice", "image": "/assets/world-10.jpg", "question": "Where is Location 10?", "options": ["City A", "City B", "City C", "City D"], "answer": 1 }
   ]
 }
