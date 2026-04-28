@@ -36,28 +36,28 @@
     { "type": "clickable-image", "image": "/assets/spot-10.jpg", "question": "Find the 5 differences! (Image 10)", "targets": [{ "x": 10, "y": 10, "r": 5, "found": false }, { "x": 20, "y": 20, "r": 5, "found": false }, { "x": 30, "y": 30, "r": 5, "found": false }, { "x": 40, "y": 40, "r": 5, "found": false }, { "x": 50, "y": 50, "r": 5, "found": false }] }
   ],
   "Find Them All": [
-    { "type": "clickable-image", "image": "/assets/findall-1.jpg", "question": "Find all 3 items (Image 1)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
-    { "type": "clickable-image", "image": "/assets/findall-2.jpg", "question": "Find all 3 items (Image 2)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
-    { "type": "clickable-image", "image": "/assets/findall-3.jpg", "question": "Find all 3 items (Image 3)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
-    { "type": "clickable-image", "image": "/assets/findall-4.jpg", "question": "Find all 3 items (Image 4)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
-    { "type": "clickable-image", "image": "/assets/findall-5.jpg", "question": "Find all 3 items (Image 5)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
-    { "type": "clickable-image", "image": "/assets/findall-6.jpg", "question": "Find all 3 items (Image 6)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
-    { "type": "clickable-image", "image": "/assets/findall-7.jpg", "question": "Find all 3 items (Image 7)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
-    { "type": "clickable-image", "image": "/assets/findall-8.jpg", "question": "Find all 3 items (Image 8)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
-    { "type": "clickable-image", "image": "/assets/findall-9.jpg", "question": "Find all 3 items (Image 9)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
-    { "type": "clickable-image", "image": "/assets/findall-10.jpg", "question": "Find all 3 items (Image 10)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] }
+    { "type": "clickable-image", "image": "/assets/find-all-1.jpg", "question": "Find all 3 items (Image 1)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/find-all-2.jpg", "question": "Find all 3 items (Image 2)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/find-all-3.jpg", "question": "Find all 3 items (Image 3)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/find-all-4.jpg", "question": "Find all 3 items (Image 4)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/find-all-5.jpg", "question": "Find all 3 items (Image 5)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/find-all-6.jpg", "question": "Find all 3 items (Image 6)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/find-all-7.jpg", "question": "Find all 3 items (Image 7)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/find-all-8.jpg", "question": "Find all 3 items (Image 8)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/find-all-9.jpg", "question": "Find all 3 items (Image 9)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] },
+    { "type": "clickable-image", "image": "/assets/find-all-10.jpg", "question": "Find all 3 items (Image 10)", "targets": [{ "x": 20, "y": 20, "r": 6, "found": false }, { "x": 50, "y": 50, "r": 6, "found": false }, { "x": 80, "y": 80, "r": 6, "found": false }] }
   ],
   "Name the Character": [
-    { "type": "multiple-choice", "image": "/assets/character-1.jpg", "question": "Who is Character 1?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 0 },
-    { "type": "multiple-choice", "image": "/assets/character-2.jpg", "question": "Who is Character 2?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 1 },
-    { "type": "multiple-choice", "image": "/assets/character-3.jpg", "question": "Who is Character 3?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 2 },
-    { "type": "multiple-choice", "image": "/assets/character-4.jpg", "question": "Who is Character 4?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 3 },
-    { "type": "multiple-choice", "image": "/assets/character-5.jpg", "question": "Who is Character 5?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 0 },
-    { "type": "multiple-choice", "image": "/assets/character-6.jpg", "question": "Who is Character 6?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 1 },
-    { "type": "multiple-choice", "image": "/assets/character-7.jpg", "question": "Who is Character 7?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 2 },
-    { "type": "multiple-choice", "image": "/assets/character-8.jpg", "question": "Who is Character 8?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 3 },
-    { "type": "multiple-choice", "image": "/assets/character-9.jpg", "question": "Who is Character 9?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 0 },
-    { "type": "multiple-choice", "image": "/assets/character-10.jpg", "question": "Who is Character 10?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 1 }
+    { "type": "multiple-choice", "image": "/assets/char-1.jpg", "question": "Who is Character 1?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 0 },
+    { "type": "multiple-choice", "image": "/assets/char-2.jpg", "question": "Who is Character 2?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 1 },
+    { "type": "multiple-choice", "image": "/assets/char-3.jpg", "question": "Who is Character 3?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 2 },
+    { "type": "multiple-choice", "image": "/assets/char-4.jpg", "question": "Who is Character 4?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 3 },
+    { "type": "multiple-choice", "image": "/assets/char-5.jpg", "question": "Who is Character 5?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 0 },
+    { "type": "multiple-choice", "image": "/assets/char-6.jpg", "question": "Who is Character 6?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 1 },
+    { "type": "multiple-choice", "image": "/assets/char-7.jpg", "question": "Who is Character 7?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 2 },
+    { "type": "multiple-choice", "image": "/assets/char-8.jpg", "question": "Who is Character 8?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 3 },
+    { "type": "multiple-choice", "image": "/assets/char-9.jpg", "question": "Who is Character 9?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 0 },
+    { "type": "multiple-choice", "image": "/assets/char-10.jpg", "question": "Who is Character 10?", "options": ["Name A", "Name B", "Name C", "Name D"], "answer": 1 }
   ],
   "Where in the World": [
     { "type": "multiple-choice", "image": "/assets/world-1.jpg", "question": "Where is Location 1?", "options": ["City A", "City B", "City C", "City D"], "answer": 0 },
