@@ -6,15 +6,17 @@
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; background: #46178f; color: white; margin: 0; padding: 0;}
         h1 { margin-top: 40px; font-size: 3em; }
         
+        /* Setup / Login */
         #setup { margin-top: 100px; }
         input { padding: 15px; font-size: 1.2em; border-radius: 5px; border: none; width: 250px; text-align: center; }
         button { padding: 15px 30px; font-size: 1.2em; border-radius: 5px; border: none; background: #333333; color: white; cursor: pointer; font-weight: bold; margin-top: 20px;}
         button:hover { background: #222; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
         
-        /* Kahoot Style Challenge Display */
+        /* Kahoot Style UI */
         #challenge-display {
-            background: white; color: #333; padding: 40px; margin: 40px auto;
-            width: 60%; border-radius: 10px; box-shadow: 0px 8px 15px rgba(0,0,0,0.2);
+            background: white; color: #333; padding: 40px; margin: 20px auto;
+            width: 80%; border-radius: 10px; box-shadow: 0px 8px 15px rgba(0,0,0,0.2);
             font-size: 2em; font-weight: bold; display: none;
         }
 
@@ -23,6 +25,19 @@
         
         #game-ui { display: none; padding: 20px; }
         #admin-controls { margin: 20px; padding: 20px; background: rgba(0,0,0,0.2); border-radius: 10px; display: none; }
+
+        /* Dynamic Challenge Formats */
+        #challenge-container { display: none; background: white; color: #333; padding: 20px; border-radius: 10px; margin: 20px auto; width: 80%; }
+        #image-wrapper { position: relative; display: inline-block; max-width: 100%; margin-top: 15px;}
+        #challenge-image { max-width: 100%; border-radius: 8px; max-height: 400px; }
+        .answer-btn { width: 100%; padding: 20px; font-size: 1.2em; border-radius: 5px; color: white; cursor: pointer; border: none; }
+        
+        /* Multiple Choice Grid */
+        #multiple-choice-ui { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .btn-color-0 { background-color: #e21b3c; }
+        .btn-color-1 { background-color: #1368ce; }
+        .btn-color-2 { background-color: #d89e00; }
+        .btn-color-3 { background-color: #26890c; }
     </style>
 </head>
 <body>
@@ -43,6 +58,22 @@
         <h2 id="round-indicator">Waiting for host to start...</h2>
         
         <div id="challenge-display">Get Ready!</div>
+
+        <div id="challenge-container">
+            <h2 id="question-text" style="margin: 0; padding-bottom: 10px; border-bottom: 2px solid #eee;"></h2>
+            
+            <div id="image-wrapper">
+                <img id="challenge-image" src="" alt="Challenge Image">
+                <div id="click-markers"></div>
+            </div>
+
+            <div id="multiple-choice-ui" style="display: none;">
+                <button class="answer-btn btn-color-0" onclick="submitAnswer(0)" id="btn-0"></button>
+                <button class="answer-btn btn-color-1" onclick="submitAnswer(1)" id="btn-1"></button>
+                <button class="answer-btn btn-color-2" onclick="submitAnswer(2)" id="btn-2"></button>
+                <button class="answer-btn btn-color-3" onclick="submitAnswer(3)" id="btn-3"></button>
+            </div>
+        </div>
         
         <div style="margin-top: 50px;">
             <h3>Scoreboard</h3>
@@ -54,16 +85,18 @@
     <script>
         const socket = io();
         let myName = "";
+        let currentChallengeData = null;
+        let targetsFound = 0;
 
+        // --- SETUP LOGIC ---
         function join() {
-            myName = document.getElementById('nameInput').value;
+            myName = document.getElementById('nameInput').value.trim();
             if(!myName) return alert("Please enter a nickname!");
             
             socket.emit('join-game', myName);
             document.getElementById('setup').style.display = 'none';
             document.getElementById('game-ui').style.display = 'block';
             
-            // For testing: if name is 'admin', show the controls
             if (myName.toLowerCase() === 'admin') {
                 document.getElementById('admin-controls').style.display = 'block';
             }
@@ -73,33 +106,112 @@
             socket.emit('admin-next-round');
         }
 
+        // --- SCOREBOARD LOGIC ---
         socket.on('update-players', (list) => {
-            // Sort by highest score first
             list.sort((a, b) => b.score - a.score);
             const ul = document.getElementById('players');
             ul.innerHTML = list.map(p => `<li class="player-item">${p.name}<br><span style="color: gold;">${p.score}</span></li>`).join('');
         });
 
-        // Instantly display the next challenge
+        // --- NEW ROUND LOGIC ---
         socket.on('new-round', (data) => {
-            const display = document.getElementById('challenge-display');
-            document.getElementById('round-indicator').innerText = `ROUND ${data.round} OF 10`;
+            currentChallengeData = data.content;
+            targetsFound = 0;
             
-            // Kahoot-style brief "Get Ready" flash before showing the challenge
+            const display = document.getElementById('challenge-display');
+            const container = document.getElementById('challenge-container');
+            
+            document.getElementById('round-indicator').innerText = `ROUND ${data.round} OF 10: ${data.challenge}`;
+            
+            // 1. Flash "Get Ready" screen
+            container.style.display = 'none';
             display.style.display = 'block';
-            display.style.background = '#f2f2f2';
             display.innerText = "Get Ready...";
             
+            // 2. Load the actual content after 2 seconds
             setTimeout(() => {
-                display.style.background = 'white';
-                display.innerText = data.challenge;
-                // Here is where you would load the specific JSON data and images for the challenge
-            }, 1500); 
+                display.style.display = 'none';
+                
+                if (!currentChallengeData) {
+                    display.style.display = 'block';
+                    display.innerText = "Error: No question data found for this category!";
+                    return;
+                }
+
+                container.style.display = 'block';
+                document.getElementById('click-markers').innerHTML = ''; 
+                document.getElementById('question-text').innerText = currentChallengeData.question;
+                
+                const imgElement = document.getElementById('challenge-image');
+                imgElement.src = currentChallengeData.image;
+
+                // Configure UI based on type
+                if (currentChallengeData.type === 'multiple-choice') {
+                    document.getElementById('multiple-choice-ui').style.display = 'grid';
+                    for(let i = 0; i < 4; i++) {
+                        const btn = document.getElementById(`btn-${i}`);
+                        btn.innerText = currentChallengeData.options[i];
+                        btn.disabled = false;
+                        btn.style.opacity = '1';
+                    }
+                    imgElement.style.cursor = 'default';
+                    imgElement.onclick = null;
+
+                } else if (currentChallengeData.type === 'clickable-image') {
+                    document.getElementById('multiple-choice-ui').style.display = 'none';
+                    imgElement.style.cursor = 'crosshair';
+                    imgElement.onclick = handleImageClick;
+                    
+                    // Reset targets for this user locally
+                    currentChallengeData.targets.forEach(t => t.found = false);
+                }
+            }, 2000); 
         });
 
+        // --- MULTIPLE CHOICE LOGIC ---
+        function submitAnswer(selectedIndex) {
+            document.querySelectorAll('.answer-btn').forEach(btn => btn.disabled = true);
+            
+            if (selectedIndex === currentChallengeData.answer) {
+                socket.emit('submit-score', 100); 
+            } else {
+                document.getElementById(`btn-${selectedIndex}`).style.opacity = '0.3';
+            }
+        }
+
+        // --- CLICKABLE IMAGE LOGIC ---
+        function handleImageClick(e) {
+            const img = document.getElementById('challenge-image');
+            const rect = img.getBoundingClientRect();
+            const clickX = ((e.clientX - rect.left) / rect.width) * 100;
+            const clickY = ((e.clientY - rect.top) / rect.height) * 100;
+
+            currentChallengeData.targets.forEach((target) => {
+                const distance = Math.sqrt(Math.pow(clickX - target.x, 2) + Math.pow(clickY - target.y, 2));
+
+                if (distance <= target.r && !target.found) {
+                    target.found = true;
+                    targetsFound++;
+                    
+                    const marker = document.createElement('div');
+                    marker.style.cssText = `position: absolute; width: 30px; height: 30px; border: 4px solid #00ff00; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; left: ${target.x}%; top: ${target.y}%; box-shadow: 0 0 10px #00ff00;`;
+                    document.getElementById('click-markers').appendChild(marker);
+
+                    socket.emit('submit-score', 20); 
+
+                    if (targetsFound === currentChallengeData.targets.length) {
+                        alert("You found them all!");
+                    }
+                }
+            });
+        }
+
+        // --- GAME OVER LOGIC ---
         socket.on('game-over', (players) => {
             document.getElementById('round-indicator').innerText = "GAME OVER!";
-            document.getElementById('challenge-display').innerText = "Look at the scoreboard to see the winner!";
+            document.getElementById('challenge-container').style.display = 'none';
+            document.getElementById('challenge-display').style.display = 'block';
+            document.getElementById('challenge-display').innerText = "Check the scoreboard to see the winner!";
             document.getElementById('admin-controls').style.display = 'none';
         });
     </script>
