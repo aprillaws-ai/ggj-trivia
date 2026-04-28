@@ -81,4 +81,59 @@ io.on('connection', (socket) => {
         const categoryQuestions = gameData[result] || [];
         let questionData = null;
         if (categoryQuestions.length > 0) {
-            const randomIndex = Math.floor
+            const randomIndex = Math.floor(Math.random() * categoryQuestions.length);
+            questionData = categoryQuestions[randomIndex];
+        }
+
+        // Broadcast to all players
+        io.emit('new-round', { 
+            challenge: result, 
+            round: gameHistory.length, 
+            content: questionData 
+        });
+    });
+
+    // 3. Precision Scoring Engine
+    socket.on('submit-answer', (data) => {
+        // data expects: { correct: boolean, timeMs: number, fraction: number }
+        const player = players.find(p => p.id === socket.id);
+        
+        if (player && data.correct) {
+            // MAX Score per challenge is 1000. 
+            // 500 base points for accuracy + up to 500 points for speed.
+            const maxSpeedBonus = 500;
+            const maxTimeMs = 20000; // 20 seconds maximum
+            
+            // Safeguard: if they somehow bypass the UI lock and submit after 20s, give 0 points
+            if (data.timeMs > maxTimeMs) return; 
+            
+            // Calculate speed bonus based on how fast they were
+            let speedBonus = Math.max(0, maxSpeedBonus - ((data.timeMs / maxTimeMs) * maxSpeedBonus));
+            let totalPointsEarned = 500 + speedBonus;
+
+            // Multiply by the fraction (e.g., finding 1 of 5 differences = 20% of the points)
+            let finalClickPoints = Math.round(totalPointsEarned * data.fraction);
+
+            // Add points to the specific round column
+            player.roundScores[currentRoundIndex] += finalClickPoints;
+            
+            // Recalculate the master total score
+            player.totalScore = player.roundScores.reduce((a, b) => a + b, 0);
+
+            // Update both screens
+            io.emit('update-players', players); 
+            io.emit('update-admin', players);
+        }
+    });
+
+    // 4. Handle Disconnects
+    socket.on('disconnect', () => {
+        players = players.filter(p => p.id !== socket.id);
+        io.emit('update-players', players);
+        io.emit('update-admin', players);
+        console.log('User disconnected:', socket.id);
+    });
+});
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => console.log(`Game running at http://localhost:${PORT}`));
