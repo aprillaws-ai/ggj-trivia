@@ -12,7 +12,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 // --- GAME STATE ---
 let players = [];
 let gameHistory = [];
-const CHALLENGES = ["Trivia", "Hidden Animal", "Spot the Difference", "Find Them All", "Name the Character", "Where in the World", "Lose 50", "Free Coins!"];
+// Removed the bonus/penalty slices
+const CHALLENGES = [
+    "Trivia", "Hidden Animal", "Spot the Difference", 
+    "Find Them All", "Name the Character", "Where in the World"
+];
+const MAX_REPEATS = 3; // Updated to max 3 repeats per game
+const TOTAL_ROUNDS = 10;
 
 io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
@@ -26,12 +32,24 @@ io.on('connection', (socket) => {
         }
     });
 
-    // Admin Spins the Wheel
-    socket.on('admin-spin', () => {
-        // Simple logic: pick random. In production, add your "max 2 repeats" filter here.
-        const result = CHALLENGES[Math.floor(Math.random() * CHALLENGES.length)];
+    // Admin Progresses the Game (Kahoot Style)
+    socket.on('admin-next-round', () => {
+        if (gameHistory.length >= TOTAL_ROUNDS) {
+            return io.emit('game-over', players);
+        }
+
+        // Filter challenges that haven't hit the 3-repeat limit
+        const available = CHALLENGES.filter(c => {
+            const count = gameHistory.filter(h => h === c).length;
+            return count < MAX_REPEATS;
+        });
+
+        // Pick a random challenge from the available pool
+        const result = available[Math.floor(Math.random() * available.length)];
         gameHistory.push(result);
-        io.emit('wheel-result', { challenge: result, round: gameHistory.length });
+        
+        // Broadcast the result instantly (No wheel wait time)
+        io.emit('new-round', { challenge: result, round: gameHistory.length });
     });
 
     // Handle Score Submissions
