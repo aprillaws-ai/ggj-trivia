@@ -1,7 +1,7 @@
 {
   "name": "ggj-community-challenge-v2",
   "version": "2.0.0",
-  "description": "Kahoot-Style Community Game",
+  "description": "Community Game",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
