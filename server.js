@@ -25,6 +25,8 @@ try {
 // --- GAME STATE ---
 let players = [];
 let gameHistory = [];
+let currentRoundIndex = -1; // Tracks which round index we are on (0 to 9)
+
 const CHALLENGES = [
     "Trivia", "Hidden Animal", "Spot the Difference", 
     "Find Them All", "Name the Character", "Where in the World"
@@ -36,11 +38,21 @@ io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
 
     // 1. Player Joins
-    socket.on('join-game', (name) => {
+    socket.on('join-game', (userData) => {
         if (players.length < 20) {
-            const player = { id: socket.id, name: name, score: 0 };
+            // Initialize an array of 10 zeros for round-by-round tracking
+            const player = { 
+                id: socket.id, 
+                name: userData.name, 
+                userId: userData.userId, 
+                roundScores: Array(TOTAL_ROUNDS).fill(0), 
+                totalScore: 0 
+            };
             players.push(player);
+            
+            // Send updates to both the player screens and the admin screen
             io.emit('update-players', players);
+            io.emit('update-admin', players); 
         } else {
             socket.emit('error-message', 'Game is full (max 20).');
         }
@@ -48,11 +60,14 @@ io.on('connection', (socket) => {
 
     // 2. Admin Progresses the Game
     socket.on('admin-next-round', () => {
+        // If we've reached 10 rounds, trigger the finale
         if (gameHistory.length >= TOTAL_ROUNDS) {
             return io.emit('game-over', players);
         }
+        
+        currentRoundIndex++; // Move to the next round column
 
-        // Enforce max repeats rule
+        // Enforce max 3 repeats rule
         const available = CHALLENGES.filter(c => {
             const count = gameHistory.filter(h => h === c).length;
             return count < MAX_REPEATS;
@@ -66,34 +81,4 @@ io.on('connection', (socket) => {
         const categoryQuestions = gameData[result] || [];
         let questionData = null;
         if (categoryQuestions.length > 0) {
-            const randomIndex = Math.floor(Math.random() * categoryQuestions.length);
-            questionData = categoryQuestions[randomIndex];
-        }
-
-        // Broadcast to all players
-        io.emit('new-round', { 
-            challenge: result, 
-            round: gameHistory.length,
-            content: questionData 
-        });
-    });
-
-    // 3. Handle Score Submissions
-    socket.on('submit-score', (points) => {
-        const player = players.find(p => p.id === socket.id);
-        if (player) {
-            player.score += points;
-            io.emit('update-players', players);
-        }
-    });
-
-    // 4. Handle Disconnects
-    socket.on('disconnect', () => {
-        players = players.filter(p => p.id !== socket.id);
-        io.emit('update-players', players);
-        console.log('User disconnected:', socket.id);
-    });
-});
-
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`Game running at http://localhost:${PORT}`));
+            const randomIndex = Math.floor
