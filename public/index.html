@@ -3,69 +3,177 @@
 <head>
     <title>GGJ Community Game V2</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; background: #46178f; color: white; margin: 0; padding: 0;}
-        h1 { margin-top: 40px; font-size: 3em; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; color: white; margin: 0; padding: 0;}
         
-        /* Setup / Login */
-        #setup { margin-top: 100px; }
-        input { padding: 15px; font-size: 1.2em; border-radius: 5px; border: none; width: 250px; text-align: center; }
-        button { padding: 15px 30px; font-size: 1.2em; border-radius: 5px; border: none; background: #333333; color: white; cursor: pointer; font-weight: bold; margin-top: 20px;}
-        button:hover { background: #222; }
-        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        body {
+            background-image: url('/assets/background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            height: 100vh;
+            overflow: hidden; 
+        }
+
+        #setup { margin-top: 50px; }
+        #game-logo { width: 100%; max-width: 450px; margin-bottom: 20px; }
         
-        /* Kahoot Style UI */
+        #setup input { 
+            padding: 12px 20px; font-size: 1.5em; font-weight: bold; border-radius: 0; 
+            border: none; width: 400px; max-width: 90%; margin: 5px auto; display: block;
+            text-align: right; color: black; box-shadow: 0px 4px 6px rgba(0,0,0,0.3);
+        }
+        
+        #join-btn { 
+            padding: 10px 40px; font-size: 1.5em; border-radius: 0; border: none; 
+            background: #00ff00; color: black; cursor: pointer; font-weight: bold; 
+            margin-top: 15px; box-shadow: 0px 4px 6px rgba(0,0,0,0.3);
+        }
+        #join-btn:hover { background: #00cc00; }
+        
+        #waiting-msg { font-size: 1.2em; font-weight: bold; margin-top: 20px; display: none; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
+
         #challenge-display {
             background: white; color: #333; padding: 40px; margin: 20px auto;
-            width: 80%; border-radius: 10px; box-shadow: 0px 8px 15px rgba(0,0,0,0.2);
+            width: 80%; border-radius: 10px; box-shadow: 0px 8px 15px rgba(0,0,0,0.5);
             font-size: 2em; font-weight: bold; display: none;
         }
 
-        .player-list { list-style: none; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; max-width: 800px; margin: auto;}
-        .player-item { background: #260c4f; margin: 5px; padding: 15px; border-radius: 5px; font-weight: bold; min-width: 120px;}
+        #challenge-container { display: none; width: 90%; margin: 20px auto; }
         
-        #game-ui { display: none; padding: 20px; }
-        #admin-controls { margin: 20px; padding: 20px; background: rgba(0,0,0,0.2); border-radius: 10px; display: none; }
-
-        /* Dynamic Challenge Formats */
-        #challenge-container { display: none; background: white; color: #333; padding: 20px; border-radius: 10px; margin: 20px auto; width: 80%; }
-        #image-wrapper { position: relative; display: inline-block; max-width: 100%; margin-top: 15px;}
-        #challenge-image { max-width: 100%; border-radius: 8px; max-height: 400px; }
-        .answer-btn { width: 100%; padding: 20px; font-size: 1.2em; border-radius: 5px; color: white; cursor: pointer; border: none; }
+        #image-wrapper { position: relative; display: inline-block; max-width: 100%; margin-bottom: 10px; }
+        #challenge-image { max-width: 100%; max-height: 55vh; border-radius: 8px; box-shadow: 0px 8px 15px rgba(0,0,0,0.5); }
         
-        /* Multiple Choice Grid */
-        #multiple-choice-ui { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        #question-text { margin: 10px auto; font-size: 1.8em; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); max-width: 800px; }
+        
+        .answer-btn { width: 100%; padding: 15px; font-size: 1.2em; border-radius: 5px; color: white; cursor: pointer; border: none; font-weight: bold; box-shadow: 0px 4px 6px rgba(0,0,0,0.5);}
+        #multiple-choice-ui { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 800px; margin: 10px auto; }
         .btn-color-0 { background-color: #e21b3c; }
         .btn-color-1 { background-color: #1368ce; }
         .btn-color-2 { background-color: #d89e00; }
         .btn-color-3 { background-color: #26890c; }
+
+        #timer-display {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3em;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 5px black;
+            display: none;
+        }
+
+        #intermission-scoreboard {
+            display: none;
+            margin-top: 15vh;
+            width: 100%;
+        }
+        
+        .score-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            width: 60%;
+            min-width: 500px;
+            margin: 15px auto;
+            font-size: 2.2em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        
+        .score-dots {
+            flex-grow: 1;
+            border-bottom: 5px dotted white;
+            margin: 0 15px;
+            position: relative;
+            top: -10px;
+            opacity: 0.8;
+        }
+
+        /* --- FINAL PODIUM STYLES --- */
+        #podium-container {
+            display: none;
+            margin-top: 10vh;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .podium-title {
+            font-size: 3.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            margin-bottom: 40px;
+        }
+        
+        .podium-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 15px;
+            height: 350px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .podium-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 30%;
+        }
+        
+        .podium-name {
+            font-size: 2.2em;
+            font-weight: bold;
+            font-style: italic;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            margin-bottom: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+        
+        .podium-box {
+            width: 100%;
+            background: white;
+            color: black;
+            font-size: 4em;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0px 8px 15px rgba(0,0,0,0.5);
+        }
+        
+        /* Set the heights for 1st, 2nd, and 3rd place boxes */
+        .place-1 .podium-box { height: 320px; }
+        .place-2 .podium-box { height: 220px; }
+        .place-3 .podium-box { height: 140px; }
     </style>
 </head>
 <body>
-    <h1>GGJ Challenge V2</h1>
-
     <div id="setup">
-        <input type="text" id="nameInput" placeholder="Enter Nickname..."><br>
-        <button onclick="join()">Enter</button>
+        <img src="/assets/logo.png" id="game-logo" alt="June's Journey">
+        <input type="text" id="nameInput" placeholder="Nickname">
+        <input type="text" id="idInput" placeholder="User ID">
+        <button id="join-btn" onclick="join()">Join</button>
+        <p id="waiting-msg">The game will begin soon. <span id="player-count">1</span>/20 Players have joined.</p>
     </div>
 
-    <div id="game-ui">
+    <div id="game-ui" style="display:none;">
+        <h2 id="round-indicator" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8); display: none;"></h2>
         
-        <div id="admin-controls">
-            <h3>Admin Controls</h3>
-            <button onclick="nextRound()">START / NEXT ROUND</button>
-        </div>
-
-        <h2 id="round-indicator">Waiting for host to start...</h2>
-        
-        <div id="challenge-display">Get Ready!</div>
+        <div id="challenge-display">Get Ready...</div>
 
         <div id="challenge-container">
-            <h2 id="question-text" style="margin: 0; padding-bottom: 10px; border-bottom: 2px solid #eee;"></h2>
-            
             <div id="image-wrapper">
                 <img id="challenge-image" src="" alt="Challenge Image">
                 <div id="click-markers"></div>
             </div>
+            
+            <h2 id="question-text"></h2>
 
             <div id="multiple-choice-ui" style="display: none;">
                 <button class="answer-btn btn-color-0" onclick="submitAnswer(0)" id="btn-0"></button>
@@ -74,69 +182,99 @@
                 <button class="answer-btn btn-color-3" onclick="submitAnswer(3)" id="btn-3"></button>
             </div>
         </div>
+
+        <div id="timer-display">:20</div>
         
-        <div style="margin-top: 50px;">
-            <h3>Scoreboard</h3>
-            <ul id="players" class="player-list"></ul>
+        <div id="intermission-scoreboard">
+            </div>
+
+        <div id="podium-container">
+            <h1 class="podium-title">Congratulations to the winners!</h1>
+            <div class="podium-wrapper">
+                
+                <div class="podium-item place-3">
+                    <div class="podium-name" id="name-3">Name</div>
+                    <div class="podium-box">3</div>
+                </div>
+                
+                <div class="podium-item place-1">
+                    <div class="podium-name" id="name-1">Name</div>
+                    <div class="podium-box">1</div>
+                </div>
+                
+                <div class="podium-item place-2">
+                    <div class="podium-name" id="name-2">Name</div>
+                    <div class="podium-box">2</div>
+                </div>
+
+            </div>
         </div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
-        let myName = "";
         let currentChallengeData = null;
         let targetsFound = 0;
+        let roundStartTime = 0; 
+        let timerInterval;
+        let globalPlayerList = []; 
 
-        // --- SETUP LOGIC ---
         function join() {
-            myName = document.getElementById('nameInput').value.trim();
-            if(!myName) return alert("Please enter a nickname!");
+            const name = document.getElementById('nameInput').value.trim();
+            const userId = document.getElementById('idInput').value.trim();
+            if(!name || !userId) return alert("Please enter both Nickname and User ID!");
             
-            socket.emit('join-game', myName);
-            document.getElementById('setup').style.display = 'none';
-            document.getElementById('game-ui').style.display = 'block';
-            
-            if (myName.toLowerCase() === 'admin') {
-                document.getElementById('admin-controls').style.display = 'block';
-            }
+            socket.emit('join-game', { name: name, userId: userId });
+            document.getElementById('join-btn').style.display = 'none';
+            document.getElementById('waiting-msg').style.display = 'block';
         }
 
-        function nextRound() {
-            socket.emit('admin-next-round');
-        }
-
-        // --- SCOREBOARD LOGIC ---
         socket.on('update-players', (list) => {
-            list.sort((a, b) => b.score - a.score);
-            const ul = document.getElementById('players');
-            ul.innerHTML = list.map(p => `<li class="player-item">${p.name}<br><span style="color: gold;">${p.score}</span></li>`).join('');
+            globalPlayerList = list;
+            document.getElementById('player-count').innerText = list.length;
+            
+            if (document.getElementById('intermission-scoreboard').style.display === 'block') {
+                renderScoreboard();
+            }
         });
 
-        // --- NEW ROUND LOGIC ---
+        function renderScoreboard() {
+            const top5 = globalPlayerList.sort((a, b) => b.totalScore - a.totalScore).slice(0, 5);
+            
+            const html = top5.map(p => `
+                <div class="score-row">
+                    <span>${p.name}</span>
+                    <span class="score-dots"></span>
+                    <span>${p.totalScore} points</span>
+                </div>
+            `).join('');
+            
+            document.getElementById('intermission-scoreboard').innerHTML = html;
+        }
+
         socket.on('new-round', (data) => {
+            document.getElementById('setup').style.display = 'none';
+            document.getElementById('game-ui').style.display = 'block';
+            document.getElementById('intermission-scoreboard').style.display = 'none';
+
             currentChallengeData = data.content;
             targetsFound = 0;
             
             const display = document.getElementById('challenge-display');
             const container = document.getElementById('challenge-container');
+            const timerDisplay = document.getElementById('timer-display');
             
-            document.getElementById('round-indicator').innerText = `ROUND ${data.round} OF 10: ${data.challenge}`;
-            
-            // 1. Flash "Get Ready" screen
             container.style.display = 'none';
+            timerDisplay.style.display = 'none';
             display.style.display = 'block';
             display.innerText = "Get Ready...";
             
-            // 2. Load the actual content after 2 seconds
+            clearInterval(timerInterval); 
+
             setTimeout(() => {
                 display.style.display = 'none';
-                
-                if (!currentChallengeData) {
-                    display.style.display = 'block';
-                    display.innerText = "Error: No question data found for this category!";
-                    return;
-                }
+                if (!currentChallengeData) return;
 
                 container.style.display = 'block';
                 document.getElementById('click-markers').innerHTML = ''; 
@@ -145,7 +283,6 @@
                 const imgElement = document.getElementById('challenge-image');
                 imgElement.src = currentChallengeData.image;
 
-                // Configure UI based on type
                 if (currentChallengeData.type === 'multiple-choice') {
                     document.getElementById('multiple-choice-ui').style.display = 'grid';
                     for(let i = 0; i < 4; i++) {
@@ -161,30 +298,62 @@
                     document.getElementById('multiple-choice-ui').style.display = 'none';
                     imgElement.style.cursor = 'crosshair';
                     imgElement.onclick = handleImageClick;
-                    
-                    // Reset targets for this user locally
                     currentChallengeData.targets.forEach(t => t.found = false);
                 }
+
+                roundStartTime = Date.now();
+                let timeLeft = 20;
+                timerDisplay.innerText = `:${timeLeft}`;
+                timerDisplay.style.display = 'block';
+
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    timerDisplay.innerText = `:${timeLeft < 10 ? '0' + timeLeft : timeLeft}`;
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        lockGameInputs();
+                        
+                        setTimeout(() => {
+                            document.getElementById('challenge-container').style.display = 'none';
+                            document.getElementById('timer-display').style.display = 'none';
+                            document.getElementById('intermission-scoreboard').style.display = 'block';
+                            renderScoreboard();
+                        }, 1000);
+                    }
+                }, 1000);
+
             }, 2000); 
         });
 
-        // --- MULTIPLE CHOICE LOGIC ---
-        function submitAnswer(selectedIndex) {
+        function lockGameInputs() {
             document.querySelectorAll('.answer-btn').forEach(btn => btn.disabled = true);
+            const img = document.getElementById('challenge-image');
+            img.style.cursor = 'default';
+            img.onclick = null;
+        }
+
+        function submitAnswer(selectedIndex) {
+            const timeTakenMs = Date.now() - roundStartTime; 
+            lockGameInputs(); 
             
-            if (selectedIndex === currentChallengeData.answer) {
-                socket.emit('submit-score', 100); 
+            const isCorrect = (selectedIndex === currentChallengeData.answer);
+            
+            if (isCorrect) {
+                socket.emit('submit-answer', { correct: true, timeMs: timeTakenMs, fraction: 1 }); 
             } else {
                 document.getElementById(`btn-${selectedIndex}`).style.opacity = '0.3';
             }
         }
 
-        // --- CLICKABLE IMAGE LOGIC ---
         function handleImageClick(e) {
+            const timeTakenMs = Date.now() - roundStartTime; 
             const img = document.getElementById('challenge-image');
             const rect = img.getBoundingClientRect();
             const clickX = ((e.clientX - rect.left) / rect.width) * 100;
             const clickY = ((e.clientY - rect.top) / rect.height) * 100;
+
+            const totalTargets = currentChallengeData.targets.length;
 
             currentChallengeData.targets.forEach((target) => {
                 const distance = Math.sqrt(Math.pow(clickX - target.x, 2) + Math.pow(clickY - target.y, 2));
@@ -197,22 +366,32 @@
                     marker.style.cssText = `position: absolute; width: 30px; height: 30px; border: 4px solid #00ff00; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; left: ${target.x}%; top: ${target.y}%; box-shadow: 0 0 10px #00ff00;`;
                     document.getElementById('click-markers').appendChild(marker);
 
-                    socket.emit('submit-score', 20); 
-
-                    if (targetsFound === currentChallengeData.targets.length) {
-                        alert("You found them all!");
+                    socket.emit('submit-answer', { correct: true, timeMs: timeTakenMs, fraction: (1 / totalTargets) }); 
+                    
+                    if (targetsFound === totalTargets) {
+                        lockGameInputs();
                     }
                 }
             });
         }
 
-        // --- GAME OVER LOGIC ---
+        // --- FINAL PODIUM LOGIC ---
         socket.on('game-over', (players) => {
-            document.getElementById('round-indicator').innerText = "GAME OVER!";
+            clearInterval(timerInterval);
+            document.getElementById('timer-display').style.display = 'none';
             document.getElementById('challenge-container').style.display = 'none';
-            document.getElementById('challenge-display').style.display = 'block';
-            document.getElementById('challenge-display').innerText = "Check the scoreboard to see the winner!";
-            document.getElementById('admin-controls').style.display = 'none';
+            document.getElementById('intermission-scoreboard').style.display = 'none';
+            
+            // Sort players one last time just to be absolutely sure
+            players.sort((a, b) => b.totalScore - a.totalScore);
+            
+            // Populate the podium names (with a fallback if fewer than 3 players are playing)
+            document.getElementById('name-1').innerText = players[0] ? players[0].name : "---";
+            document.getElementById('name-2').innerText = players[1] ? players[1].name : "---";
+            document.getElementById('name-3').innerText = players[2] ? players[2].name : "---";
+
+            // Reveal the podium!
+            document.getElementById('podium-container').style.display = 'block';
         });
     </script>
 </body>
